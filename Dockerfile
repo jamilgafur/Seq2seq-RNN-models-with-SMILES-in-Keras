@@ -1,9 +1,16 @@
 FROM  tensorflow/tensorflow:devel-gpu
 
-
+# Enviorment setup
 ENV CONDA_PATH=/opt/anaconda3
 ENV ENVIRONMENT_NAME=main
 SHELL ["/bin/bash", "-c"]
+
+# Updates
+RUN apt-get update
+RUN /usr/bin/python3 -m pip install --upgrade pip
+RUN apt-get install libxrender1 -y
+RUN apt-get install -y libsm6 libxext6 -y
+RUN apt-get install -y libxrender-dev -y
 
 # Download and install Anaconda.
 RUN cd /tmp && curl -O https://repo.anaconda.com/archive/Anaconda3-2019.07-Linux-x86_64.sh
@@ -18,11 +25,14 @@ RUN ${CONDA_PATH}/bin/conda init bash
 RUN ${CONDA_PATH}/bin/conda update -n base -c defaults conda -y
 
 # Create the work environment and setup its activation on start.
-RUN ${CONDA_PATH}/bin/conda create --name ${ENVIRONMENT_NAME} -y
+RUN ${CONDA_PATH}/bin/conda create --name ${ENVIRONMENT_NAME} anaconda -y
 RUN echo conda activate ${ENVIRONMENT_NAME} >> /root/.bashrc
 
-
-RUN apt-get update
-RUN pip install  rdkit-pypi
-RUN . ${CONDA_PATH}/bin/activate ${ENVIRONMENT_NAME} \
-  && conda install -c conda-forge keras && conda install anaconda
+# Install libraries
+RUN pip install numpy
+RUN pip install scipy
+RUN pip install scikit-learn
+RUN pip install tensorflow-gpu
+RUN pip install rdkit-pypi
+RUN apt install libgfortran4 -y 
+RUN . ${CONDA_PATH}/bin/activate ${ENVIRONMENT_NAME} && conda install -c conda-forge keras 
