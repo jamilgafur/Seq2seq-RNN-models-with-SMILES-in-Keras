@@ -29,10 +29,11 @@ RUN ${CONDA_PATH}/bin/conda create --name ${ENVIRONMENT_NAME} anaconda -y
 RUN echo conda activate ${ENVIRONMENT_NAME} >> /root/.bashrc
 
 # Install libraries
-RUN pip install numpy
-RUN pip install scipy
-RUN pip install scikit-learn
-RUN pip install tensorflow-gpu
-RUN pip install rdkit-pypi
-RUN apt install libgfortran4 -y 
 RUN . ${CONDA_PATH}/bin/activate ${ENVIRONMENT_NAME} && conda install -c conda-forge keras 
+
+RUN pip3 install numpy
+RUN pip3 install scipy
+RUN pip3 install scikit-learn
+RUN pip3 install tensorflow-gpu
+RUN pip3 install rdkit-pypi
+RUN apt install libgfortran4 -y 
